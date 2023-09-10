@@ -1,26 +1,11 @@
 import { PrismaClient } from '@prisma/client'
 import { Request, Response } from 'express'
-import { handleHttp } from '../utils/error.handler'
-import { hashingPassword } from '../utils/hashing'
+import { hash } from 'bcrypt'
 const prisma = new PrismaClient()
 
 const getUser = (req: Request, res: Response) => {
   try {
-  } catch (error) {
-    handleHttp(res, 'Error al obtener usuario')
-  }
-}
-
-const login = (req: Request, res: Response) => {
-  try {
-    const dataDb = prisma.user.findUniqueOrThrow({
-      where: {
-        id: req.body.id
-      }
-    })
-  } catch (error) {
-    handleHttp(res, 'Error en login de usuario')
-  }
+  } catch (error) {}
 }
 
 const getUsers = async (req: Request, res: Response) => {
@@ -33,21 +18,17 @@ const getUsers = async (req: Request, res: Response) => {
       },
     })
     res.send(users)
-  } catch (error) {
-    handleHttp(res, 'Error al obtener usuarios')
-  }
+  } catch (error) {}
 }
 
 const updateUser = (req: Request, res: Response) => {
   try {
-  } catch (error) {
-    handleHttp(res, 'ERROR_UPDATE_USER')
-  }
+  } catch (error) {}
 }
 const postUser = async (req: Request, res: Response) => {
   try {
     const { name, lastName, email } = req.body
-    const password = await hashingPassword(req.body.password)
+    const password = await hash(req.body.password, 13)
     const user = await prisma.user.create({
       data: {
         name,
@@ -57,15 +38,11 @@ const postUser = async (req: Request, res: Response) => {
       },
     })
     res.status(201).json({ user })
-  } catch (error) {
-    handleHttp(res, 'ERROR_POST_USER')
-  }
+  } catch (error) {}
 }
 const deleteUser = (req: Request, res: Response) => {
   try {
-  } catch (error) {
-    handleHttp(res, 'ERROR_DELETE_USER')
-  }
+  } catch (error) {}
 }
 
 export { getUser, getUsers, updateUser, postUser, deleteUser }

@@ -9,11 +9,6 @@ import {
 
 const router = Router()
 
-/* router.get('/signin', (req, res, next) => {
-  res.send('GET request to the homepage')
-  res.end
-}) */
-
 router.get('/', getNote)
 router.get('/:id', getNotes)
 router.post('/', postNote)

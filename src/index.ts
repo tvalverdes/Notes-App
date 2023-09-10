@@ -1,6 +1,7 @@
 import express, { json } from 'express'
 const app = express()
 app.use(express.json())
+import 'dotenv/config'
 const port = process.env.PORT ?? 1234
 import routes from './routes'
 

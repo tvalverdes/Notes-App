@@ -1,8 +1,10 @@
 import { Response } from 'express'
 
-const handleHttp = (res: Response, error: String) => {
-  res.status(500)
-  res.send({ error })
+export const errorResponse = (
+  res: Response,
+  statusCode: number,
+  errorMessage: string
+) => {
+  res.status(statusCode)
+  throw errorMessage
 }
-
-export { handleHttp }
