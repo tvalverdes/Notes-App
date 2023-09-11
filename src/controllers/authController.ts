@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import { tokenSign } from '../utils/jwt.handler'
 import { compare, hash } from 'bcrypt'
 import { errorResponse } from '../utils/error.handler'
+import { UserLoginData } from '../interfaces/user.interface'
 const prisma = new PrismaClient()
 
 export const loginCtrl = async (req: Request, res: Response) => {
@@ -11,31 +12,34 @@ export const loginCtrl = async (req: Request, res: Response) => {
     const user = await prisma.user.findUnique({
       where: { email: email },
     })
-
     if (!user) {
-      res.status(404).send({ error: 'No se encontró usuario' })
-      return
+      throw errorResponse(res, 404, 'Usuario no encontrado')
     }
-
     const validPassword = await compare(password, user.password)
-
+    if (!validPassword) {
+      throw errorResponse(res, 403, 'Contraseña incorrecta')
+    }
     const tokenSession = await tokenSign(user)
-    const data = {
+    const data: UserLoginData = {
       id: user.id,
       name: user.name,
       lastName: user.lastName,
       email,
     }
-    if (validPassword) {
-      res.send({
-        data: data,
-        tokenSession,
-      })
-      return
-    } else {
-      throw errorResponse(res, 403, 'Contraseña incorrecta')
-    }
+    res.send({ data })
+    console.log(tokenSession)
+    res.cookie('token', tokenSession, {
+      httpOnly: true,
+      maxAge: 2 * 24 * 60 * 60 * 1000,
+    })
   } catch (error) {
-    res.send(error)
+    res.send({ error })
   }
+}
+
+export const showLogin = (req: Request, res: Response) => {
+  res.send({ message: 'Login válido' })
+}
+export const showRegister = (req: Request, res: Response) => {
+  res.send('<h1>Interfaz de registro</h1>')
 }

@@ -7,3 +7,10 @@ export interface User {
   creationDate: Date
   updatedAt: Date
 }
+
+export interface UserLoginData {
+  id: number;
+  name: string;
+  lastName: string;
+  email: string;
+}

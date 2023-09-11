@@ -11,18 +11,10 @@ export const tokenSign = async (user: User) => {
       },
       process.env.JWT_SECRET as string,
       {
-        expiresIn: '8h',
+        expiresIn: '5m',
       }
     )
   } catch (err) {
     console.log(err)
-  }
-}
-
-export const verifyToken = async (token: string) => {
-  try {
-    return jwt.verify(token, process.env.JWT_SECRET as string)
-  } catch (err) {
-    return null
   }
 }
