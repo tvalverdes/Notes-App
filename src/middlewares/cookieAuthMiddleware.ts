@@ -14,6 +14,6 @@ export const verifyCookieToken = (
     return jwt.verify(tokenCookie, process.env.JWT_SECRET as string)
   } catch (err) {
     res.send({ message: 'Inicia sesión primero' })
-    next()
+    res.redirect()
   }
 }
